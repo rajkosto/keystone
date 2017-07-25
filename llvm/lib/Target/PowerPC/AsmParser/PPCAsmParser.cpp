@@ -299,7 +299,7 @@ public:
     Triple TheTriple(STI.getTargetTriple());
     IsPPC64 = (TheTriple.getArch() == Triple::ppc64 ||
                TheTriple.getArch() == Triple::ppc64le);
-    IsDarwin = TheTriple.isMacOSX();
+    IsDarwin = true;
     // Initialize the set of available features.
     setAvailableFeatures(ComputeAvailableFeatures(STI.getFeatureBits()));
   }

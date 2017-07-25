@@ -208,7 +208,18 @@ bool MCAssembler::evaluateFixup(const MCAsmLayout &Layout,
             ks_sym_resolver resolver = (ks_sym_resolver)KsSymResolver;
             if (resolver(Sym.getName().str().c_str(), &imm)) {
                 // resolver handled this symbol
-                Value = imm;
+                Value += imm;
+
+				if (Target.getSymA() != nullptr && Target.getSymA()->getKind() == MCSymbolRefExpr::VK_PPC_HI)
+					Value >>= 16;
+				else if (Target.getSymA() != nullptr && Target.getSymA()->getKind() == MCSymbolRefExpr::VK_PPC_HA)
+				{
+					const bool increase = (Value & 0x8000u) != 0;
+					Value >>= 16;
+					if (increase)
+						Value++;
+				}
+
                 IsResolved = true;
             } else {
                 // resolver did not handle this symbol
